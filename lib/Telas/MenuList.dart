@@ -1,7 +1,7 @@
 import 'dart:ui';
 
+import 'package:contagem_inventario/Objects/Contagem.dart';
 import 'package:flutter/material.dart';
-import '../Objects/Contagem.dart';
 import '../Objects/Contagens.dart';
 import 'CadastroContagem.dart';
 
@@ -37,15 +37,20 @@ class MenuListPage extends StatefulWidget {
 
 class _MenuListPageState extends State<MenuListPage> {
   void _select(Choice choice) {
-    // Causes the app to rebuild with the new _selectedChoice.
-    setState(() {});
+    print(choice.title);
+    if (choice.title == "Limpar Listas") {
+      setState(() {
+        contagens = new Contagens();
+      });
+    }
   }
 
-  void select() {
-    print("select");
+  void updateListas(value) {
+    print(value);
     setState(() {
-      contagens.add(new Contagem("Teste 1", 100));
-      contagens.add(new Contagem("Teste 2", 333));
+      String name = "${value.text}";
+      var c = Contagem(name, 0);
+      contagens.add(c);
     });
   }
 
@@ -62,6 +67,7 @@ class _MenuListPageState extends State<MenuListPage> {
             itemBuilder: (BuildContext context) {
               return choices.skip(0).map((Choice choice) {
                 return PopupMenuItem<Choice>(
+                  enabled: choice.enable,
                   value: choice,
                   child: Text(choice.title),
                 );
@@ -79,8 +85,10 @@ class _MenuListPageState extends State<MenuListPage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CadastroContagem()),
-          );
+            MaterialPageRoute(
+              builder: (context) => new CadastroContagem(context),
+            ),
+          ).then((value) => updateListas(value));
         },
         child: Icon(Icons.add),
       ),
@@ -103,21 +111,23 @@ class _MenuListPageState extends State<MenuListPage> {
 }
 
 class Choice {
-  const Choice({this.title});
+  const Choice({this.title, this.enable});
 
   final String title;
+  final bool enable;
 }
 
 const List<Choice> choices = const <Choice>[
-  const Choice(title: 'Atualizar'),
-  const Choice(title: 'Enviar Contagens'),
-  const Choice(title: 'Limpar Listas'),
+  const Choice(title: 'Atualizar', enable: false),
+  const Choice(title: 'Enviar Contagens', enable: false),
+  const Choice(title: 'Limpar Listas', enable: true),
 ];
 
 class ChoiceCard extends StatelessWidget {
-  const ChoiceCard({Key key, this.choice}) : super(key: key);
+  const ChoiceCard({Key key, this.choice, this.enable}) : super(key: key);
 
   final Choice choice;
+  final bool enable;
 
   @override
   Widget build(BuildContext context) {

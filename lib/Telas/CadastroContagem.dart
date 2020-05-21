@@ -1,18 +1,17 @@
-import 'package:contagem_inventario/Objects/FormCadastroContagem.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:contagem_inventario/Objects/FormCadastroContagem.dart';
+import '../Objects/Contagem.dart';
 
 class CadastroContagem extends StatelessWidget {
+  final BuildContext context;
+
+  CadastroContagem(this.context) {}
   @override
   Widget build(BuildContext context) {
     campos = new FormCadastroContagem();
     campos.init();
-    return MaterialApp(
-      title: 'Cadastrar Contagem',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: CadastroContagemPage(title: 'Contagem Estoque'),
-    );
+    return CadastroContagemPage(title: 'Contagem Estoque');
   }
 }
 
@@ -26,6 +25,7 @@ class CadastroContagemPage extends StatefulWidget {
 }
 
 class _CadastroContagemPageState extends State<CadastroContagemPage> {
+  final myController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,12 +34,12 @@ class _CadastroContagemPageState extends State<CadastroContagemPage> {
       ),
       body: Center(
         child: Column(
-          children: getForms(),
+          children: getForms(myController),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pop(context);
+          Navigator.pop(context, myController);
         },
         backgroundColor: Colors.green,
         child: Icon(Icons.check),
@@ -50,7 +50,24 @@ class _CadastroContagemPageState extends State<CadastroContagemPage> {
 
 FormCadastroContagem campos;
 
-List<Widget> getForms() {
+List<Widget> getForms(TextEditingController myController) {
+  return [
+    TextField(
+      textInputAction: TextInputAction.none,
+      autofocus: true,
+      keyboardType: TextInputType.number,
+      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+      textAlign: TextAlign.center,
+      controller: myController,
+      key: Key('n_contagem'),
+      decoration: InputDecoration(
+        labelText: 'Número da Contegem',
+      ),
+    ),
+  ];
+}
+
+List<Widget> old_getForms() {
   return [
     for (var c in campos.getAll())
       TextField(
