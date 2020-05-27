@@ -16,6 +16,9 @@ class MenuList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     contagens = Contagens();
+    //para testes:
+    contagens.add(Contagem("1"));
+    //
     return MaterialApp(
       title: 'Contagem Estoque',
       theme: ThemeData(
@@ -49,12 +52,24 @@ class _MenuListPageState extends State<MenuListPage> {
     print(value);
     setState(() {
       String name = "${value.text}";
-      var c = Contagem(name, 0);
+      var c = Contagem(name);
       contagens.add(c);
     });
   }
 
   List<Widget> listas;
+  doItOnList(var w) {
+    setState(() {
+      String doit;
+      if (w is Text) {
+        doit = w.data;
+      }
+      if (doit.contains("Deletar")) {
+        String id = doit.split(" ")[1];
+        contagens.delete(id);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +118,30 @@ class _MenuListPageState extends State<MenuListPage> {
             leading: Icon(Icons.storage),
             title: Text("Contagem: ${c.namecontagem}"),
             subtitle: Text('QT Itens contados: ${c.qt_itens}'),
-            trailing: Icon(Icons.more_vert),
+            trailing: Container(
+                child: PopupMenuButton(
+              onSelected: (Widget wselect) {
+                setState(() {
+                  Text _wselect = wselect as Text;
+                  doItOnList(_wselect);
+                });
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<Widget>>[
+                PopupMenuItem<Text>(
+                  value: Text('Contar ${c.id}'),
+                  child: Text('Contar'),
+                ),
+                PopupMenuItem<Text>(
+                  enabled: false,
+                  value: Text('Editar ${c.id}'),
+                  child: Text('Editar'),
+                ),
+                PopupMenuItem<Widget>(
+                  value: Text('Deletar ${c.id}'),
+                  child: Text('Deletar'),
+                ),
+              ],
+            )),
           ),
         )
     ];

@@ -14,4 +14,17 @@ class Contagens {
   List<Contagem> getAll() {
     return this.contagens;
   }
+
+  void delete(String id) {
+    for (Contagem c in contagens) {
+      print(c.id);
+      print(id);
+      if (c.id.contains(id)) {
+        contagens.remove(c);
+        return;
+      }
+    }
+  }
+
+  Contagem _find(String id) {}
 }
