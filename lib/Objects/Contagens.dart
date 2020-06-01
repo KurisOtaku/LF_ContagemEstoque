@@ -27,4 +27,13 @@ class Contagens {
   }
 
   Contagem _find(String id) {}
+
+  Contagem getContagem(String id) {
+    for (Contagem c in this.contagens) {
+      if (c.id == id) {
+        return c;
+      }
+    }
+    return null;
+  }
 }

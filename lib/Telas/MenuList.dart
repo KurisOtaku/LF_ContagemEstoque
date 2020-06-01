@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:contagem_inventario/Objects/Contagem.dart';
+import 'package:contagem_inventario/Telas/ContagemItens.dart';
 import 'package:flutter/material.dart';
 import '../Objects/Contagens.dart';
 import 'CadastroContagem.dart';
@@ -58,7 +59,7 @@ class _MenuListPageState extends State<MenuListPage> {
   }
 
   List<Widget> listas;
-  doItOnList(var w) {
+  _doItOnList(var w) {
     setState(() {
       String doit;
       if (w is Text) {
@@ -67,8 +68,24 @@ class _MenuListPageState extends State<MenuListPage> {
       if (doit.contains("Deletar")) {
         String id = doit.split(" ")[1];
         contagens.delete(id);
+        return;
+      }
+      if (doit.contains("Contar")) {
+        String id = doit.split(" ")[1];
+        _callConategem(id);
+        return;
       }
     });
+  }
+
+  _callConategem(String id) {
+    Contagem contagem = contagens.getContagem(id);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => new ContagemItens(context, contagem),
+      ),
+    ).then((value) => updateListas(value));
   }
 
   @override
@@ -123,7 +140,7 @@ class _MenuListPageState extends State<MenuListPage> {
               onSelected: (Widget wselect) {
                 setState(() {
                   Text _wselect = wselect as Text;
-                  doItOnList(_wselect);
+                  _doItOnList(_wselect);
                 });
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<Widget>>[

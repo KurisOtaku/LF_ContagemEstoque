@@ -1,7 +1,10 @@
+import 'Produto.dart';
+
 class Contagem {
-  int qt_itens;
-  String namecontagem;
   String id;
+  String namecontagem;
+  int qt_itens;
+  List<Produto> produtos;
 
   Contagem(String namecontagem) {
     qt_itens = 0;
@@ -11,6 +14,12 @@ class Contagem {
     this.id =
         "${dateSlug}_${today.hour.toString()}:${today.minute.toString()}:${today.second.toString()}";
     this.namecontagem = "${dateSlug}_${namecontagem}";
+    this.produtos = List<Produto>();
     this.qt_itens = qt_itens;
+  }
+
+  void add(Produto p) {
+    this.produtos.add(p);
+    this.qt_itens = this.produtos.length;
   }
 }
