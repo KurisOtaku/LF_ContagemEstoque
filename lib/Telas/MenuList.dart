@@ -4,19 +4,18 @@ import 'package:contagem_inventario/Objects/Contagem.dart';
 import 'package:contagem_inventario/Telas/ContagemItens.dart';
 import 'package:flutter/material.dart';
 import '../Objects/Contagens.dart';
+import '../Objects/Portfolio.dart';
 import 'CadastroContagem.dart';
-
-/*
-  Listas
-*/
 
 //
 Contagens contagens;
+Portfolio portfolio;
 
 class MenuList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     contagens = Contagens();
+    portfolio = Portfolio();
     //para testes:
     contagens.add(Contagem("1"));
     //
@@ -50,7 +49,6 @@ class _MenuListPageState extends State<MenuListPage> {
   }
 
   void updateListas(value) {
-    print(value);
     setState(() {
       String name = "${value.text}";
       var c = Contagem(name);
@@ -83,9 +81,11 @@ class _MenuListPageState extends State<MenuListPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => new ContagemItens(context, contagem),
+        builder: (context) => new ContagemItens(context, contagem, portfolio),
       ),
-    ).then((value) => updateListas(value));
+    ).then((value) {
+      setState(() {});
+    });
   }
 
   @override
@@ -109,6 +109,7 @@ class _MenuListPageState extends State<MenuListPage> {
         ],
       ),
       body: Center(
+        //child: BotaoTestes(),
         child: ListView(
           children: getLista(),
         ),
@@ -150,8 +151,8 @@ class _MenuListPageState extends State<MenuListPage> {
                 ),
                 PopupMenuItem<Text>(
                   enabled: false,
-                  value: Text('Editar ${c.id}'),
-                  child: Text('Editar'),
+                  value: Text('Resumir ${c.id}'),
+                  child: Text('Resumir'),
                 ),
                 PopupMenuItem<Widget>(
                   value: Text('Deletar ${c.id}'),
@@ -162,6 +163,26 @@ class _MenuListPageState extends State<MenuListPage> {
           ),
         )
     ];
+  }
+}
+
+class BotaoTestes extends StatelessWidget {
+  const BotaoTestes({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        FloatingActionButton(
+            onPressed: () {
+              portfolio.printjson();
+            },
+            child: Text("Teste"))
+      ],
+    );
   }
 }
 

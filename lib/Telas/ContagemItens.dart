@@ -1,3 +1,4 @@
+import 'package:contagem_inventario/Objects/Portfolio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,8 +8,9 @@ import '../Objects/Produto.dart';
 class ContagemItens extends StatelessWidget {
   final BuildContext context;
   final Contagem contagem;
+  final Portfolio portfolio;
 
-  ContagemItens(this.context, this.contagem);
+  ContagemItens(this.context, this.contagem, this.portfolio);
   @override
   Widget build(BuildContext context) {
     return ContagemItensPage(
@@ -18,7 +20,9 @@ class ContagemItens extends StatelessWidget {
 
 class ContagemItensPage extends StatefulWidget {
   Contagem contagem;
-  ContagemItensPage({Key key, this.title, this.contagem}) : super(key: key);
+  Portfolio portfolio;
+  ContagemItensPage({Key key, this.title, this.contagem, this.portfolio})
+      : super(key: key);
 
   final String title;
 
@@ -26,12 +30,15 @@ class ContagemItensPage extends StatefulWidget {
   _ContagemItensPageState createState() {
     _ContagemItensPageState c = _ContagemItensPageState();
     c._setContagem(contagem);
+    c._setPortfolio(portfolio);
     return c;
   }
 }
 
 class _ContagemItensPageState extends State<ContagemItensPage> {
   Contagem contagem;
+
+  Portfolio portfolio;
   //FIELDS
   final tec_cod = TextEditingController();
   final tec_pallet = TextEditingController();
@@ -39,8 +46,11 @@ class _ContagemItensPageState extends State<ContagemItensPage> {
   final tec_cx = TextEditingController();
   final tec_un = TextEditingController();
 
+  String descfield;
+
   @override
   Widget build(BuildContext context) {
+    descfield = "_____";
     return Center(
       child: Scaffold(
         appBar: AppBar(
@@ -67,94 +77,94 @@ class _ContagemItensPageState extends State<ContagemItensPage> {
             });
           },
         ),
-        body: Column(
-          children: [
-            Center(
-              child: Text("Item: ${contagem.qt_itens + 1}"),
-            ),
-            SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                      // COD
-                      controller: tec_cod,
-                      autofocus: true,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        labelText: 'Codigo Produto',
-                      ),
-                      textInputAction: TextInputAction.next,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  Center(
+                    child: Text("Item: ${contagem.qt_itens + 1} $descfield"),
+                  ),
+                  TextFormField(
+                    // COD
+                    onChanged: (value) => replacenameprodut(value),
+                    controller: tec_cod,
+                    autofocus: true,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      labelText: 'Codigo Produto',
                     ),
-                    TextFormField(
-                      // PALLETS
-                      controller: tec_pallet,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        labelText: 'Pallets',
-                      ),
-                      textInputAction: TextInputAction.next,
+                    textInputAction: TextInputAction.go,
+                  ),
+                  TextFormField(
+                    // PALLETS
+                    controller: tec_pallet,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      labelText: 'Pallets',
                     ),
-                    TextFormField(
-                      //  LASTROS
-                      controller: tec_lastro,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        labelText: 'Lastros',
-                      ),
-                      textInputAction: TextInputAction.next,
+                    textInputAction: TextInputAction.next,
+                  ),
+                  TextFormField(
+                    //  LASTROS
+                    controller: tec_lastro,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      labelText: 'Lastros',
                     ),
-                    TextFormField(
-                      // CX / Fd
-                      controller: tec_cx,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        labelText: 'Cx/fd',
-                      ),
-                      textInputAction: TextInputAction.next,
+                    textInputAction: TextInputAction.next,
+                  ),
+                  TextFormField(
+                    // CX / Fd
+                    controller: tec_cx,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      labelText: 'Cx/fd',
                     ),
-                    TextFormField(
-                      //  UN
-                      controller: tec_un,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        labelText: 'UN',
-                      ),
-                      textInputAction: TextInputAction.next,
+                    textInputAction: TextInputAction.next,
+                  ),
+                  TextFormField(
+                    //  UN
+                    controller: tec_un,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      labelText: 'UN',
                     ),
-                  ],
-                ),
+                    textInputAction: TextInputAction.next,
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  void _setContagem(Contagem contagem) {
-    this.contagem = contagem;
-  }
+  void _setContagem(Contagem contagem) => this.contagem = contagem;
+
+  void _setPortfolio(Portfolio portfolio) => this.portfolio = portfolio;
 
   void _salvaProduto(
       String cod, String pallet, String lastro, String cx, String un) {
@@ -179,6 +189,12 @@ class _ContagemItensPageState extends State<ContagemItensPage> {
     tec_lastro.clear();
     tec_cx.clear();
     tec_un.clear();
+  }
+
+  replacenameprodut(value) {
+    setState(() {
+      this.descfield = "$value";
+    });
   }
 }
 
